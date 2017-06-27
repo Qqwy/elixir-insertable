@@ -59,7 +59,7 @@ defimpl Insertable, for: Map do
   def insert(map, {key, value}) do
     Map.put(map, key, value)
   end
-  def insert(map, _) do
+  def insert(_map, _) do
     :error
   end
 end

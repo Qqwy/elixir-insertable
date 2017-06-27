@@ -1,10 +1,10 @@
 # Insertable
 
-**TODO: Add description**
+A lightweight reusable Insertable protocol, allowing insertion elements one-at-a-time into a collection.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+The package can be installed
 by adding `insertable` to your list of dependencies in `mix.exs`:
 
 ```elixir

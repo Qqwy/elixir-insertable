@@ -7,7 +7,12 @@ defmodule Insertable.Mixfile do
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     name: "Insertable",
+     description: description(),
+     source_url: "https://github.com/Qqwy/elixir-insertable",
+     package: package()
+    ]
   end
 
   # Configuration for the OTP application
@@ -28,6 +33,24 @@ defmodule Insertable.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:ex_doc, "~> 0.14", only: :dev}
+    ]
+  end
+
+  defp description() do
+    """
+    A lightweight reusable Insertable protocol, allowing insertion elements one-at-a-time into a collection.
+    """
+  end
+
+  defp package() do
+    [
+      name: :insertable,
+      files: ["lib", "mix.exs", "README*"],
+      maintainers: ["Qqwy/Wiebe-Marten Wijnja"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/Qqwy/elixir-insertable"}
+    ]
   end
 end
