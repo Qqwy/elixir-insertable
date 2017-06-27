@@ -28,7 +28,7 @@ iex> Insertable.insert([], 1)
 iex> Insertable.insert([1, 2, 3, 4], 5)
 {:ok, [5, 1, 2, 3, 4]}
 
-iex> Insertable.insert(%{a: 10, b: 20}, {a: 30})
+iex> Insertable.insert(%{a: 10, b: 20}, {:a, 30})
 {:ok, %{a: 10, b: 20}}
 
 iex> Insertable.insert(%{a: 1, b: 2}, 42)

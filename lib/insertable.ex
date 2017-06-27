@@ -31,13 +31,13 @@ defprotocol Insertable do
       iex> Insertable.insert([1, 2, 3, 4], 5)
       {:ok, [5, 1, 2, 3, 4]}
 
-      iex> Insertable.insert(%{a: 10, b: 20}, {a: 30})
+      iex> Insertable.insert(%{a: 10, b: 20}, {:a, 30})
       {:ok, %{a: 10, b: 20}}
 
       iex> Insertable.insert(%{a: 1, b: 2}, 42)
       :error
 
-      iex> Insertable.insert(MapSet.new([1, 2, 3, 4], 33))
+      iex> Insertable.insert(MapSet.new([1, 2, 3, 4]), 33)
       #MapSet<[1, 2, 3, 4, 33]>
   """
 
@@ -66,6 +66,6 @@ end
 
 defimpl Insertable, for: MapSet do
   def insert(mapset, item) do
-    {:ok, MapSet.union(mapset, MapSet.new(item))}
+    {:ok, MapSet.union(mapset, MapSet.new([item]))}
   end
 end
