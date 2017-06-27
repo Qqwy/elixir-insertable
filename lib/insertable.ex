@@ -47,7 +47,7 @@ end
 
 defimpl Insertable, for: List do
   def insert(list, item) do
-    [item | list]
+    {:ok, [item | list]}
   end
 end
 
@@ -57,7 +57,7 @@ defimpl Insertable, for: Map do
   Attempting to insert other things returns `:error`, as required by the protocol.
   """
   def insert(map, {key, value}) do
-    Map.put(map, key, value)
+    {:ok, Map.put(map, key, value)}
   end
   def insert(_map, _) do
     :error
@@ -66,6 +66,6 @@ end
 
 defimpl Insertable, for: MapSet do
   def insert(mapset, item) do
-    MapSet.union(mapset, MapSet.new(item))
+    {:ok, MapSet.union(mapset, MapSet.new(item))}
   end
 end
