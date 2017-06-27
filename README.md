@@ -1,5 +1,7 @@
 # Insertable
 
+[![hex.pm version](https://img.shields.io/hexpm/v/insertable.svg)](https://hex.pm/packages/insertable)
+
 A lightweight reusable Insertable protocol, allowing insertion elements one-at-a-time into a collection.
 
 ## Description
