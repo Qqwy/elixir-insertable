@@ -32,12 +32,13 @@ defprotocol Insertable do
       {:ok, [5, 1, 2, 3, 4]}
 
       iex> Insertable.insert(%{a: 10, b: 20}, {:a, 30})
-      {:ok, %{a: 10, b: 20}}
+      {:ok, %{a: 30, b: 20}}
 
       iex> Insertable.insert(%{a: 1, b: 2}, 42)
       :error
 
-      iex> Insertable.insert(MapSet.new([1, 2, 3, 4]), 33)
+      iex> {:ok, result} = Insertable.insert(MapSet.new([1, 2, 3, 4]), 33)
+      iex> result
       #MapSet<[1, 2, 3, 4, 33]>
   """
 

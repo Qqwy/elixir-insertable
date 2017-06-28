@@ -7,6 +7,7 @@ defmodule Insertable.Mixfile do
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     consolidate_protocols: Mix.env != :test, # Required until elixir-lang/elixir#6270 is fixed.
      deps: deps(),
      name: "Insertable",
      description: description(),
