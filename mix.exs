@@ -4,7 +4,7 @@ defmodule Insertable.Mixfile do
   def project do
     [app: :insertable,
      version: "0.1.1",
-     elixir: "~> 1.4",
+     elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      consolidate_protocols: Mix.env != :test, # Required until elixir-lang/elixir#6270 is fixed.
