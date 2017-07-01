@@ -34,7 +34,7 @@ iex> Insertable.insert(%{a: 10, b: 20}, {:a, 30})
 {:ok, %{a: 10, b: 20}}
 
 iex> Insertable.insert(%{a: 1, b: 2}, 42)
-:error
+{:error, :invalid_item_type}
 
 iex> Insertable.insert(MapSet.new([1, 2, 3, 4], 33))
 #MapSet<[1, 2, 3, 4, 33]>
@@ -47,7 +47,7 @@ by adding `insertable` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:insertable, "~> 0.1.0"}]
+  [{:insertable, "~> 0.2.0"}]
 end
 ```
 

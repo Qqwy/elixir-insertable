@@ -20,14 +20,21 @@ defprotocol Insertable do
   @doc """
   Insertable.insert/2 returns `{:ok, collection}` where `collection` is the new collection
   with the item having been inserted (possibly replacing an already-existing item in the process),
-  or `:error` if it is impossible to insert the item (either because `item`'s format was incorrect,
-  or because the `collection` is for instance full)
+  or `{:error, reason}` if it is impossible to insert the item for some reason.
+
+  The following error reasons are standardized, allowing the caller to handle them gracefully:
+
+  - `:invalid_item_type`: To be returned if the item cannot be inserted because it is incompatible with the stuff already inside the collection.
+      Examples of this would be Maps, for which only `{key, value}`-items make sense,
+      or for instance matrices, for which only vectors of the same size as the matrix' height make sense.
+  - `:full`: To be returned if the collection only allows a limited number of items, and one first should be removed again after another item can be inserted.
+
 
   ## Examples
 
       iex> Insertable.insert([], 1)
       {:ok, [1]}
- 
+
       iex> Insertable.insert([1, 2, 3, 4], 5)
       {:ok, [5, 1, 2, 3, 4]}
 
@@ -35,14 +42,14 @@ defprotocol Insertable do
       {:ok, %{a: 30, b: 20}}
 
       iex> Insertable.insert(%{a: 1, b: 2}, 42)
-      :error
+      {:error, :invalid_item_type}
 
       iex> {:ok, result} = Insertable.insert(MapSet.new([1, 2, 3, 4]), 33)
       iex> result
       #MapSet<[1, 2, 3, 4, 33]>
   """
 
-  @spec insert(Insertable.t, item :: any) :: {:ok, Insertable.t} | :error
+  @spec insert(Insertable.t, item :: any) :: {:ok, Insertable.t} | {:error, :invalid_item_type} | {:error, :full} | {:error, other_reason :: any}
   def insert(insertable, item)
 end
 
@@ -55,13 +62,13 @@ end
 defimpl Insertable, for: Map do
   @doc """
   Insertable.insert/2 for Map only allows inserting a `{key, value}`-tuple.
-  Attempting to insert other things returns `:error`, as required by the protocol.
+  Attempting to insert other things returns `{:error, :invalid_item_type}`, as required by the protocol.
   """
   def insert(map, {key, value}) do
     {:ok, Map.put(map, key, value)}
   end
   def insert(_map, _) do
-    :error
+    {:error, :invalid_item_type}
   end
 end
 
