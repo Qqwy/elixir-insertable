@@ -4,7 +4,7 @@ defmodule Insertable.Mixfile do
   def project do
     [app: :insertable,
      version: "0.2.0",
-     elixir: "~> 1.3",
+     elixir: "~> 1.9",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      consolidate_protocols: Mix.env != :test, # Required until elixir-lang/elixir#6270 is fixed.
@@ -35,7 +35,11 @@ defmodule Insertable.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ex_doc, "~> 0.14", only: :dev}
+      {:type_check, "~> 0.8"},
+      {:ex_doc, "~> 0.14", only: :dev},
+      {:excoveralls, "~> 0.10", only: :test},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 
