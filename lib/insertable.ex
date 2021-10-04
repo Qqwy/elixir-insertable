@@ -17,6 +17,8 @@ defprotocol Insertable do
 
   """
 
+  use TypeCheck
+
   @doc """
   Insertable.insert/2 returns `{:ok, collection}` where `collection` is the new collection
   with the item having been inserted (possibly replacing an already-existing item in the process),
@@ -47,9 +49,18 @@ defprotocol Insertable do
       iex> {:ok, result} = Insertable.insert(MapSet.new([1, 2, 3, 4]), 33)
       iex> result
       #MapSet<[1, 2, 3, 4, 33]>
+
+      iex> Insertable.insert(5..10, 4)
+      {:ok, 4..10}
+
+      iex> Insertable.insert(5..10, 3)
+      {:error, :invalid_item_value}
+
+      iex> Insertable.insert(5..10, "oops")
+      {:error, :invalid_item_type}
   """
 
-  @spec insert(Insertable.t, item :: any) :: {:ok, Insertable.t} | {:error, :invalid_item_type} | {:error, :full} | {:error, other_reason :: any}
+  @spec! insert(impl(Insertable), item :: any()) :: {:ok, impl(Insertable)} | {:error, :invalid_item_type} | {:error, :full} | {:error, other_reason :: any()}
   def insert(insertable, item)
 end
 
@@ -75,5 +86,45 @@ end
 defimpl Insertable, for: MapSet do
   def insert(mapset, item) do
     {:ok, MapSet.union(mapset, MapSet.new([item]))}
+  end
+end
+
+
+defimpl Insertable, for: Range do
+
+  @doc """
+  Insertion into `range` is only allowed when `item` is exactly one `step` before `range.first`.
+
+  In Elixir versions prior to 1.12, `step` will be 1 or -1
+  depending on whether `range.first` is smaller or larger than `range.last`.
+
+  For other integer `item`s, `{:error, :invalid_item_value}` is returned.
+  For non-integer `item`s, `{:error, :invalid_item_type}` is returned.
+  """
+
+  # For Elixir versions >= 1.12 (with Range `step` field)
+  def insert(%{__struct__: Range, first: first, last: last, step: step}, item) when is_integer(item) do
+    if item == (first - step) do
+      new_range = %{__struct__: Range, first: first - step, last: last, step: step}
+      {:ok, new_range}
+    else
+      {:error, :invalid_item_value}
+    end
+  end
+
+  # For Elixir versions < 1.12 (with no Range `step` field)
+  def insert(%{__struct__: Range, first: first, last: last}, item) when is_integer(item) do
+    step = if first > last, do: -1, else: 1
+
+    if item == (first - step) do
+      new_range = %{__struct__: Range, first: first - step, last: last}
+      {:ok, new_range}
+    else
+      {:error, :invalid_item_value}
+    end
+  end
+
+  def insert(%{__struct__: Range}, _item) do
+    {:error, :invalid_item_type}
   end
 end
